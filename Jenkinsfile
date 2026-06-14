@@ -2,29 +2,30 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
-                checkout scm
-            }
-        }
-    
-        stage ("terraform init") {
-            steps {
-                sh ("terraform init -reconfigure") 
-            }
-        }
-        
-        stage ("plan") {
-            steps {
-                sh ('terraform plan') 
+                git branch: 'master',
+                    url: 'git@github.com:Adeniyi-Archer/myInfra2021Repo.git'
             }
         }
 
-        stage (" Action") {
+        stage('Terraform Init') {
             steps {
-                echo "Terraform action is --> ${action}"
-                sh ('terraform ${action} --auto-approve') 
-           }
+                sh 'terraform init -reconfigure'
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                sh 'terraform plan'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply -auto-approve'
+            }
         }
     }
 }
